@@ -41,6 +41,10 @@ class DarknetUtil:
 
 
     def detect(self, image, thresh = 0.25):
+        """
+        image : np형식의 이미지
+        thresh : 최소 탐지율
+        """
         #20201227 수정된 부분
         #shape 순서는 height, width, channel 순서임
 
