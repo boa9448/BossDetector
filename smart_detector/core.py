@@ -1,9 +1,7 @@
-import ctypes
 import cv2
 import numpy as np
 import pickle
 import socket
-from ctypes import wintypes
 
 #UDP소켓 통신용 클래스
 class SocketUDPUtil:
