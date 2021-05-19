@@ -1,7 +1,4 @@
 import ctypes
-import win32con
-import win32api
-import win32ui
 import cv2
 import numpy as np
 import pickle
