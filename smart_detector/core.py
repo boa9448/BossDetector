@@ -95,3 +95,31 @@ class DarknetUtil:
             retBoxes.append({"x":x, "y":y, "w":w, "h":h, "id":class_ids[i[0]], "thresh":confidences[i[0]]})
         
         return retBoxes
+
+#추후에 확장을 위한 클래스
+class DetectUtil:
+    def __init__(self):
+        pass
+
+    def __del__(self):
+        pass
+
+if __name__ == "__main__":
+    #디텍터 생성
+    detector = DarknetUtil("yolov4-tiny.cfg", "yolov4-tiny.weights", (608, 608))
+    
+    #테스트 이미지 불러옴
+    img = cv2.imread("test.jpg", cv2.IMREAD_UNCHANGED)
+
+    #이미지에서 디텍션
+    min_thresh = 0.7
+    resultList = detector.detect(img, min_thresh)
+
+    #찾은 결과에 바운딩 박스만 출력
+    for result in resultList:
+        cv2.rectangle(img, (result["x"], result["y"]), (result["x"] + result["w"], result["y"] + result["h"]), (0, 255, 0), 2)
+
+    #결과 이미지 표시
+    cv2.imshow("view", img)
+    cv2.waitKey()
+    cv2.destroyAllWindows()
