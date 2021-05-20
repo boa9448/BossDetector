@@ -118,7 +118,7 @@ UINT CSApp::SocketThreadFunc(LPVOID lpParam)
 	CString strAddr;
 	UINT nPort;
 
-	auto DrawDesktop = [](INT blinkCount = 3) -> VOID
+	auto DrawDesktop = [](INT blinkCount = 2) -> VOID
 	{
 		CWnd desktopWnd;
 		desktopWnd.Attach(GetDesktopWindow());
@@ -144,14 +144,14 @@ UINT CSApp::SocketThreadFunc(LPVOID lpParam)
 		BLENDFUNCTION bf;
 		bf.BlendOp = AC_SRC_OVER;
 		bf.BlendFlags = 0;
-		bf.SourceConstantAlpha = 50; //0:투명 ~ 255:불투명
+		bf.SourceConstantAlpha = 25; //0:투명 ~ 255:불투명
 		bf.AlphaFormat = 0;
 
 		for (INT a = 0; a < blinkCount; a++)
 		{
 			lpDesktopDC->AlphaBlend(0, 0, desktopRect.Width(), desktopRect.Height()
 				, &blandDC, 0, 0, desktopRect.Width(), desktopRect.Height(), bf);
-			Sleep(100);
+			Sleep(50);
 			lpDesktopDC->BitBlt(0, 0, desktopRect.Width(), desktopRect.Height(), &desktopCopyDC, 0, 0, SRCCOPY);
 		}
 
@@ -188,9 +188,9 @@ UINT CSApp::SocketThreadFunc(LPVOID lpParam)
 		if (nRecvCount > 0)
 		{
 			if (lstrcmpW((WCHAR*)recvBuf, L"detect") == 0)
+			{
 				DrawDesktop();
-			else if (lstrcmpW((WCHAR*)recvBuf, L"not detect") == 0)
-				;
+			}
 		}
 	}
 
