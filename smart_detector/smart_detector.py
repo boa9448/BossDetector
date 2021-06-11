@@ -6,19 +6,21 @@ import argparse
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-p", "--port", help = "바인드할 서버포트", type = int, default = 9600)
-parser.add_argument("-l", "--log", help = "표시할 로그의 레벨"
+parser.add_argument("-l", "--level", help = "표시할 로그의 레벨"
                     , choices = ["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"]
                     , default = "WARNING")
 #parser.add_argument("-f", "--logPath", help = "로그 파일을 저장할 경로", default = "./log.txt")
 parser.add_argument("-c", "--cfgPath", help = "cfg파일의 경로", default = "yolov4-tiny.cfg")
 parser.add_argument("-w", "--weightsPath", help = "weights파일의 경로", default = "yolov4-tiny.weights")
 parser.add_argument("-t", "--thresh", help = "최소 탐지율", type = float, default = 0.9)
-parser.add_argument("-v", "--view", help = "캠의 화면을 보여줄지 안보여줄지 True, False", type = bool, default = False)
+parser.add_argument("-v", "--view", help = "캠의 화면을 보여줄지 안보여줄지 ex : [True, False]", choices = [True, False], type = bool, default = False)
+parser.add_argument("-s", "--netSize", help = "dnn의 입력 사이즈 ex : (608, 608)", type = tuple, default = (608, 608))
+parser.add_argument("-f", "--folderPath", help = "얼굴 이미지가 저장된 폴더의 경로", default = "./images")
 args = parser.parse_args()
 
 def main():
     #로거 레벨 셋팅
-    numbericLevel = getattr(logging, args.log.upper(), logging.WARNING)
+    numbericLevel = getattr(logging, args.level.upper(), logging.WARNING)
     logging.basicConfig(level = numbericLevel)
 
     #클라이언트에게 통보하기 위해서 소켓 생성

@@ -389,3 +389,4 @@ FodyWeavers.xsd
 
 # 파이썬 가상환경
 env/
+*/__pycache__/

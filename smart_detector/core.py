@@ -2,6 +2,9 @@ import cv2
 import numpy as np
 import pickle
 import socket
+import mediapipe as mp
+mp_face_detection = mp.solutions.face_detection
+mp_drawing = mp.solutions.drawing_utils
 
 #UDP소켓 통신용 클래스
 class SocketUDPUtil:
@@ -99,6 +102,35 @@ class DarknetUtil:
             retBoxes.append({"x":x, "y":y, "w":w, "h":h, "id":class_ids[i[0]], "thresh":confidences[i[0]]})
         
         return retBoxes
+
+
+class MediapipeFaceUtil:
+    def __init__(self):
+        self.faceDetector = mp_face_detection.FaceDetection(min_detection_confidence=0.5)
+
+    def __del__(self):
+        self.faceDetector.close()
+
+    def detect(self, img, thresh = 0.8):
+        results = self.faceDetector.process(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
+
+        if not results.detections:
+            return []
+
+        height, width, channel = img.shape
+        findList = []
+        for idx, detection in enumerate(results.detections):
+            if detection.score[0] < thresh:
+                continue
+
+            location = detection.location_data.relative_bounding_box
+            x = int(location.xmin * width)
+            y = int(location.ymin * height)
+            w = int(location.width * width)
+            h = int(location.height * height)
+            findList.append({"x":x, "y":y, "w":w, "h":h, "thresh": detection.score[0]})
+
+        return findList
 
 #추후에 확장을 위한 클래스
 class DetectUtil:
