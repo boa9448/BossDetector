@@ -119,7 +119,7 @@ class MediapipeFaceUtil:
 
         height, width, channel = img.shape
         findList = []
-        for idx, detection in enumerate(results.detections):
+        for detection in results.detections:
             if detection.score[0] < thresh:
                 continue
 

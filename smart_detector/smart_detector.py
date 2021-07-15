@@ -3,6 +3,7 @@ import cv2
 import logging
 import time
 import argparse
+import PyAutoMakerHuman as pamh
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-p", "--port", help = "바인드할 서버포트", type = int, default = 9600)
