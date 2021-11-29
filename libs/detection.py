@@ -3,7 +3,7 @@ import numpy as np
 import mediapipe as mp
 
 
-#from . import exception
+from . import exception
 
 
 mp_face_detection = mp.solutions.face_detection
@@ -47,18 +47,4 @@ class FaceDetector:
 
 
 if __name__ == "__main__":
-    cap = cv2.VideoCapture(0)
-    detector = FaceDetector()
-    while cap.isOpened():
-        success, img = cap.read()
-        if not success:
-            continue
-
-        results = detector.detect(img)
-        img = detector.draw(img, results)
-        cv2.imshow("view", img)
-        if cv2.waitKey(1) & 0xFF == 27:
-            break
-
-    cap.release()
-    cv2.destroyAllWindows()
+    pass
