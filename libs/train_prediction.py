@@ -1,9 +1,14 @@
 import os
 import pickle
 from typing import Any
+
+
 import numpy as np
 from sklearn.preprocessing import LabelEncoder
 from sklearn.svm import SVC
+
+
+from . import detection
 
 
 class SvmUtil:
@@ -19,7 +24,7 @@ class SvmUtil:
 
     @logger.setter
     def logger(self, new_logger : Any) -> None:
-        self._logger = new_logger
+        self._logger = new_logger        
     
     def train_svm(self, data : list, label : list) -> SVC:
         self.le = LabelEncoder()
