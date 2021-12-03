@@ -2,3 +2,4 @@ opencv-contrib-python
 mediapipe
 scikit-learn
 pyside6
+imutils
