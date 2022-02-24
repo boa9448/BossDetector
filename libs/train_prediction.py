@@ -11,7 +11,7 @@ from sklearn.svm import SVC
 
 
 from . import embed_model_path
-from .detection import FaceDetector
+from .detection import FaceDetector, FaceDetectOutput
 from .utils import cv2_imread
 
 
@@ -32,14 +32,22 @@ class SvmUtil:
     def logger(self, new_logger : Any) -> None:
         self._logger = new_logger
 
-    def extract(self, img : np.ndarray) -> list[Any]:
-        face_list = self._detector.detect_crop(img)
-        if not face_list:
+    def draw(self, img : np.ndarray, boxes : FaceDetectOutput) -> np.ndarray:
+        return self._detector.draw(img, boxes)
+
+    def extract(self, img : np.ndarray) -> tuple[FaceDetectOutput, list[Any]]:
+        results = self._detector.detect_crop(img)
+        if not results:
             return list()
 
+        detection_output, face_list = results
         knownEmbeddings = list()
 
         for face in face_list:
+            h, w, _ = face.shape
+            if h == 0 or w == 0:
+                continue
+            
             faceBlob = cv2.dnn.blobFromImage(face, 1.0 / 255,
                     (96, 96), (0, 0, 0), swapRB=True, crop=False)
             self._embedder.setInput(faceBlob)
@@ -49,7 +57,7 @@ class SvmUtil:
             # embedding to their respective lists
             knownEmbeddings.append(vec.flatten())
 
-        return knownEmbeddings
+        return detection_output, knownEmbeddings
 
     def extract_train_dataset(self, dataset_path : str) -> tuple[list, list]:
         file_list = list()
@@ -70,9 +78,10 @@ class SvmUtil:
             result = self.extract(img)
             if not result:
                 continue
-
+            
+            detection_output, embedds = result
             name_list.append(name)
-            data_list.append(result[0]) #맨 처음 등록된 1개의 정보만 데이터로 등록
+            data_list.append(embedds[0]) #맨 처음 등록된 1개의 정보만 데이터로 등록
 
         self.logger("done")
         return (name_list, data_list)

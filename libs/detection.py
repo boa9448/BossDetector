@@ -55,9 +55,12 @@ class FaceDetector:
 
         return img_list
 
-    def detect_crop(self, img : np.ndarray) -> list[np.ndarray]:
+    def detect_crop(self, img : np.ndarray) -> tuple[FaceDetectOutput, list[np.ndarray]]:
         face_list = self.detect(img)
-        return self.crop(img, face_list)
+        if not face_list:
+            return tuple()
+
+        return (face_list, self.crop(img, face_list))
 
 
 
