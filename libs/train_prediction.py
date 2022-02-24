@@ -32,10 +32,24 @@ class SvmUtil:
     def logger(self, new_logger : Any) -> None:
         self._logger = new_logger
 
-    def extract(self, img : np.ndarray) -> list[tuple]:
-        face_list = self._detector.detect(img)
+    def extract(self, img : np.ndarray) -> list[Any]:
+        face_list = self._detector.detect_crop(img)
         if not face_list:
             return list()
+
+        knownEmbeddings = list()
+
+        for face in face_list:
+            faceBlob = cv2.dnn.blobFromImage(face, 1.0 / 255,
+                    (96, 96), (0, 0, 0), swapRB=True, crop=False)
+            self._embedder.setInput(faceBlob)
+            vec = self._embedder.forward()
+
+            # add the name of the person + corresponding face
+            # embedding to their respective lists
+            knownEmbeddings.append(vec.flatten())
+
+        return knownEmbeddings
 
     def extract_train_dataset(self, dataset_path : str) -> tuple[list, list]:
         file_list = list()
@@ -53,7 +67,6 @@ class SvmUtil:
             name = file.split(os.path.sep)[-2]
 
             img = cv2_imread(file)
-            img = imutils.resize(img, width=600)
             result = self.extract(img)
             if not result:
                 continue
