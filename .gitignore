@@ -388,5 +388,5 @@ FodyWeavers.xsd
 *.sln.iml
 
 # 파이썬 가상환경
-env/
+venv/
 */__pycache__/
